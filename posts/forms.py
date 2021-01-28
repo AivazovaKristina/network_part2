@@ -1,17 +1,20 @@
-from django.forms import ModelForm, TextInput, Textarea, ChoiceField, ModelChoiceField
-from .models import Post,Group
+from django import forms
+from django.forms import (ChoiceField, ModelChoiceField, ModelForm, Textarea,
+                          TextInput)
 
+from .models import Comment, Group, Post
+
+# from users.models import Comment
 
 
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        #group = ModelChoiceField(queryset=Group.objects.all(), to_field_name=None, required=False)
+        fields = ['group', 'text', 'image',]
 
-        fields = ('group', 'text')
-        # widgets = {
-        #     "text": Textarea(attrs={
-        #         'class':'form-control',
-        #         'placeholder':"Введите текст"
-        #     }),
-        # }
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+
+

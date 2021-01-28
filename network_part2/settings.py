@@ -25,20 +25,25 @@ SECRET_KEY = '2*l)t&dhw6gq^wc1mrbc5(yx&y%y@qhrhaj*eo3(71t1gsfj*('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'users.apps.UsersConfig',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sorl.thumbnail',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -49,6 +54,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+]
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 ROOT_URLCONF = 'network_part2.urls'
@@ -118,13 +127,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+CACHES = {'default':{
+    'BACKEND' : 'django.core.cache.backends.locmem.LocMemCache',
+}}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,"static")
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 LOGIN_URL = "/auth/login/"
 
@@ -137,3 +153,6 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR,"sent_emails")
 SIGNUP_URL = "/auth/login/"
 
 SIGNUP_REDIRECT_URL = "posts"
+
+
+

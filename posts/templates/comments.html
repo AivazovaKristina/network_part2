@@ -1,0 +1,44 @@
+{#{% load users_filters %}#}
+{% extends "base.html" %}
+{% block title %}Создать пост {% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row justify-content-center">
+    <div class="col-md-8 p-5">
+        <div class="card">
+            <div class="card-header"> Добавить комментарий</div>
+            <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                 <div class="form-group row" aria-required="true">
+                                <div class="col-md-6">
+                                    {{ form.text }}
+                                </div>
+                </div>
+
+                    <div class="col-md-6 offset-md-4">
+                            <button type="submit" class="btn btn-primary">
+                                Отправить
+                            </button>
+                    </div>
+                </form>
+            </div> <!-- card body -->
+        </div> <!-- card -->
+    </div> <!-- col -->
+</div> <!-- row -->
+{% endif %}
+    {% for item in comments %}
+<div class="media card mb-4">
+    <div class="media-body card-body">
+        <h5 class="mt-0">
+            <a href="{% url 'profile' item.author.username %}"
+               name="comment_{{ item.id }}">
+                {{ item.author.username }}
+            </a>
+        </h5>
+        <p>{{ item.text | linebreaksbr }}</p>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+

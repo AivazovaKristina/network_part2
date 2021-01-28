@@ -4,16 +4,7 @@
 {% block content %}
     <p>{{group.description }}</p>
     {% for post in posts %}
-        <div class="row justify-content-center">
-    <div class="col-md-9 p-4">
-        <div class="card">
-        <div class="card-header">Автор: {{ post.author.get_full_name }}, дата публикации: {{ post.pub_date|date:"d M Y" }}</div>
-        <div class="card-body">
-            <p>{{ post.text|linebreaksbr }}</p>
-        </div> <!-- card body -->
-        </div> <!-- card -->
-        </div> <!-- col -->
-    </div> <!-- row -->
+        {% include 'post_item.html' %}
     {% endfor %}
 {% endblock %}
 
