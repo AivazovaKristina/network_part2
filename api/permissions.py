@@ -41,7 +41,7 @@ class MyCustomPermissionClass(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if view.action == 'create' and request.user.is_authenticated:
             return True
-        if (view.action == 'destroy' or view.action == 'update' or view.action == 'partial_update') and (request.user.is_admin or request.user.is_moderator or (request.user == obj.owner)):
+        if request.user.is_authenticated and (view.action == 'destroy' or view.action == 'update' or view.action == 'partial_update') and (request.user.is_admin or request.user.is_moderator or (request.user == obj.author and request.user.is_user)):
             return True
         if view.action == 'list' or view.action == 'retrieve':
             return True

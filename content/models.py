@@ -1,7 +1,7 @@
 from django.db import models
 
 from users.models import User
-from .validators import validate_year
+from .validators import validate_year,validate_score
 
 class Genre(models.Model):
     name = models.CharField(max_length=255)
@@ -35,7 +35,7 @@ class Title(models.Model):
 class Review(models.Model):
     text = models.TextField(blank=False)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
-    score = models.CharField(max_length=10)
+    score = models.IntegerField(validators=[validate_score])
     pub_date = models.DateTimeField("date published", auto_now_add=True)
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
 

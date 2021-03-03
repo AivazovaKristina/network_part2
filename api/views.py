@@ -3,6 +3,8 @@ from django.core.mail import send_mail
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
+from .pagination import CustomLimitOffsetPagination
+
 from rest_framework import filters, status, viewsets, serializers
 from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
@@ -73,6 +75,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdmin]
     filter_backends = [filters.SearchFilter]
     search_fields = ['user__username', ]
+    pagination_class = CustomLimitOffsetPagination
 
     @action(methods=['patch', 'get'],
             permission_classes=[IsAuthenticated],
@@ -103,6 +106,7 @@ class CategoryViewSet(ModelMixinSet):
     filter_backends = [SearchFilter]
     search_fields = ['=name', ]
     lookup_field = 'slug'
+    pagination_class = CustomLimitOffsetPagination
 
 
 class GenreViewSet(ModelMixinSet):
@@ -112,12 +116,15 @@ class GenreViewSet(ModelMixinSet):
     filter_backends = [SearchFilter]
     search_fields = ['=name']
     lookup_field = 'slug'
+    pagination_class = CustomLimitOffsetPagination
+
 
 
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = [IsAdminOrReadOnly, ]
     filterset_class = TitleFilter
+    pagination_class = CustomLimitOffsetPagination
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -129,29 +136,27 @@ class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewsSerializer
     permission_classes = [MyCustomPermissionClass]
+    pagination_class = CustomLimitOffsetPagination
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        # permission_classes = [AllowAny]
-        return title.review_set
+        return title.review_set.all()
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
 
-    # def perform_update(self, serializer):
-    #     title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-    #     serializer.save(author=self.request.user, title=title)
 
 
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentsSerializer
     permission_classes = [MyCustomPermissionClass]
+    pagination_class = CustomLimitOffsetPagination
 
     def get_queryset(self):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-        return review.comment_set
+        return review.comment_set.all()
 
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
